@@ -20,3 +20,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       naming-strategy: org.hibernate.cfg.DefaultNamingStrategy
+
+jwt:
+  secretKey: sdsdlkldfsfkdjsjfgkowflksnfsjfiossmlvsjfiejiwjroiewjirjijwfwjirwjirjiowjirjiwjifjikjsfcksnfjwsifjioejrijwirjfi

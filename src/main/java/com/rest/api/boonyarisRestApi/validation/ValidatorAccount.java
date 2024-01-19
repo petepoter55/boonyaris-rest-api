@@ -12,4 +12,9 @@ public class ValidatorAccount {
         if (!accountRequest.getEmail().equals(accountRequest.getConfirmEmail()))
             throw new ResponseException(Constant.STATUS_CODE_ERROR, Constant.ERROR_ACCOUNT_REQUEST_EMAIL_INVALID);
     }
+
+    public void validateUsername(String username) {
+        if (username.isEmpty())
+            throw new ResponseException(Constant.STATUS_CODE_ERROR, Constant.ERROR_LOGIN_USERNAME_IS_EMPTY);
+    }
 }

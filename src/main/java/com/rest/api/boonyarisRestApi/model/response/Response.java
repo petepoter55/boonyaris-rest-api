@@ -29,6 +29,10 @@ public class Response<T> {
         return new Response<T>(true, code, message, data);
     }
 
+    public static <T> Response<T> success(String code, String message) {
+        return new Response<T>(false, code, message, null);
+    }
+
     public static <T> Response<T> fail(String code, String message) {
         return new Response<T>(false, code, message, null);
     }
