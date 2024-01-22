@@ -6,6 +6,7 @@ import com.rest.api.boonyarisRestApi.exception.ResponseException;
 import com.rest.api.boonyarisRestApi.model.request.AccountLoginRequest;
 import com.rest.api.boonyarisRestApi.model.request.AccountRequest;
 import com.rest.api.boonyarisRestApi.model.response.Response;
+import com.rest.api.boonyarisRestApi.model.response.ResponseAccount;
 import com.rest.api.boonyarisRestApi.repository.AccountRepository;
 import com.rest.api.boonyarisRestApi.utils.DateUtils;
 import com.rest.api.boonyarisRestApi.utils.UtilityTools;
@@ -30,38 +31,44 @@ public class AccountService {
     private final UtilityTools utilityTools;
     private final DateUtils dateUtils;
     private final JwtService jwtService;
+    private final ResponseMapperService responseMapperService;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, ValidatorAccount validatorAccount, UtilityTools utilityTools, DateUtils dateUtils, JwtService jwtService) {
+    public AccountService(AccountRepository accountRepository, ValidatorAccount validatorAccount, UtilityTools utilityTools, DateUtils dateUtils, JwtService jwtService, ResponseMapperService responseMapperService) {
         this.accountRepository = accountRepository;
         this.validatorAccount = validatorAccount;
         this.utilityTools = utilityTools;
         this.dateUtils = dateUtils;
         this.jwtService = jwtService;
+        this.responseMapperService = responseMapperService;
     }
 
-    public List<Account> inquiryAllAccount() {
+    public Response inquiryAllAccount() {
         List<Account> accountList = accountRepository.findAll();
         if (accountList.isEmpty()) {
             throw new ResponseException(Constant.STATUS_CODE_FOUND, Constant.ERROR_UPDATE_DATA_NOT_FOUND);
         }
-        return accountList;
+        return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.MESSAGE_SUCCESS, accountList);
     }
 
     public Response inquiryAccountById(Integer id) {
         Optional<Account> account;
+        ResponseAccount responseAccount;
         try {
             account = accountRepository.findById(id);
             if (!account.isPresent()) {
                 throw new ResponseException(Constant.STATUS_CODE_FOUND, Constant.ERROR_UPDATE_DATA_NOT_FOUND);
             }
+            responseAccount = responseMapperService.mapInquiryAccount(account.get());
         } catch (ResponseException e) {
             return Response.fail(e.getExceptionCode(), e.getMessage());
         }
-        return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.MESSAGE_SUCCESS, account.get());
+        return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.MESSAGE_SUCCESS, responseAccount);
     }
 
     public Response deleteAccountById(Integer id) {
+        logger.info("==== start delete account =====");
+        logger.info("delete account id : {}", id);
         try {
             Optional<Account> account = accountRepository.findById(id);
             if (!account.isPresent()) {
@@ -71,7 +78,7 @@ public class AccountService {
         } catch (ResponseException e) {
             throw new ResponseException(Constant.STATUS_CODE_FOUND, Constant.ERROR_UPDATE_DATA_NOT_FOUND);
         }
-
+        logger.info("==== done delete account =====");
         return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.MESSAGE_SUCCESS);
     }
 

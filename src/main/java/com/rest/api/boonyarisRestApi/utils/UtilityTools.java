@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 
 @Component
 public class UtilityTools {
@@ -36,5 +39,61 @@ public class UtilityTools {
 
     public boolean checkPassword(String hashNewPass, String hashOldPass) {
         return hashSha256(hashNewPass).equals(hashOldPass);
+    }
+
+    public String generateDateTimeToThai(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int day = cal.get(Calendar.DATE);
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+
+        return day + " " + convert2FullMonth(String.valueOf(month)) + " " + (year + 543);
+    }
+
+    public static String convert2FullMonth(String month) {
+        String monthName = "";
+        switch (month) {
+            case "1":
+                monthName = "มกราคม";
+                break;
+            case "2":
+                monthName = "กุมภาพันธ์";
+                break;
+            case "3":
+                monthName = "มีนาคม";
+                break;
+            case "4":
+                monthName = "เมษายน";
+                break;
+            case "5":
+                monthName = "พฤษภาคม";
+                break;
+            case "6":
+                monthName = "มิถุนายน";
+                break;
+            case "7":
+                monthName = "กรกฎาคม";
+                break;
+            case "8":
+                monthName = "สิงหาคม";
+                break;
+            case "9":
+                monthName = "กันยายน";
+                break;
+            case "10":
+                monthName = "ตุลาคม";
+                break;
+            case "11":
+                monthName = "พฤศจิกายน";
+                break;
+            case "12":
+                monthName = "ธันวาคม";
+                break;
+            default:
+                monthName = "";
+                break;
+        }
+        return monthName;
     }
 }
