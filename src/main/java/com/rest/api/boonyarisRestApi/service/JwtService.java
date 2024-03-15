@@ -39,7 +39,7 @@ public class JwtService {
 
         Calendar currentDate = Calendar.getInstance();
         Date date = currentDate.getTime();
-        currentDate.add(Calendar.MINUTE, 1);
+        currentDate.add(Calendar.MINUTE, 5);
         logger.info("generate token expire time : {}", currentDate);
 
         SecretKey key = Keys.hmacShaKeyFor(this.secretKey.getBytes(StandardCharsets.UTF_8));

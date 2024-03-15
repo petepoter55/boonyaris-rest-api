@@ -5,11 +5,13 @@ import com.rest.api.boonyarisRestApi.exception.ResponseException;
 import com.rest.api.boonyarisRestApi.model.request.AccountLoginRequest;
 import com.rest.api.boonyarisRestApi.model.request.AccountRequest;
 import com.rest.api.boonyarisRestApi.model.response.Response;
+import com.rest.api.boonyarisRestApi.model.response.ResponseAccount;
 import com.rest.api.boonyarisRestApi.service.AccountService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +45,7 @@ public class AccountController {
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @GetMapping(value = "/inquiryAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> inquiryAccount(
+    public Response<List<Account>> inquiryAccount(
             HttpServletRequest request
     ) {
         logger.info("Path = {} method = {} INITIATED...", request.getRequestURI(), request.getMethod());
@@ -61,7 +63,7 @@ public class AccountController {
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @GetMapping(value = "/inquiryBy/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response inquiryAccount(
+    public Response<ResponseAccount> inquiryAccount(
             @PathVariable(value = "id") Integer id,
             HttpServletRequest request
     ) throws ResponseException {
@@ -80,7 +82,7 @@ public class AccountController {
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @DeleteMapping(value = "/deleteBy/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Response deleteAccount(
+    public Response<T> deleteAccount(
             @PathVariable(value = "id") Integer id,
             HttpServletRequest request
     ) {
@@ -99,7 +101,7 @@ public class AccountController {
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @PostMapping(value = "/createAccount")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response createAccount(
+    public Response<Account> createAccount(
             @Valid @RequestBody(required = true) AccountRequest accountRequest,
             HttpServletRequest request
     ) {
@@ -118,7 +120,7 @@ public class AccountController {
             @ApiResponse(code = 503, message = "Service Unavailable")})
     @PostMapping(value = "/loginAccount")
     @ResponseStatus(HttpStatus.OK)
-    public Response loginAccount(
+    public Response<String> loginAccount(
             @ApiParam(name = "AccountLoginRequest", value = "Account login in the request body", required = true)
             @RequestBody(required = true) AccountLoginRequest accountLoginRequest,
             HttpServletRequest request

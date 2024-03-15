@@ -12,10 +12,15 @@ import com.rest.api.boonyarisRestApi.utils.DateUtils;
 import com.rest.api.boonyarisRestApi.utils.UtilityTools;
 import com.rest.api.boonyarisRestApi.validation.ValidatorAccount;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,18 +37,22 @@ public class AccountService {
     private final DateUtils dateUtils;
     private final JwtService jwtService;
     private final ResponseMapperService responseMapperService;
+    private final RequestMapperService requestMapperService;
+    private final EmailService emailService;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, ValidatorAccount validatorAccount, UtilityTools utilityTools, DateUtils dateUtils, JwtService jwtService, ResponseMapperService responseMapperService) {
+    public AccountService(AccountRepository accountRepository, ValidatorAccount validatorAccount, UtilityTools utilityTools, DateUtils dateUtils, JwtService jwtService, ResponseMapperService responseMapperService, RequestMapperService requestMapperService, EmailService emailService) {
         this.accountRepository = accountRepository;
         this.validatorAccount = validatorAccount;
         this.utilityTools = utilityTools;
         this.dateUtils = dateUtils;
         this.jwtService = jwtService;
         this.responseMapperService = responseMapperService;
+        this.requestMapperService = requestMapperService;
+        this.emailService = emailService;
     }
 
-    public Response inquiryAllAccount() {
+    public Response<List<Account>> inquiryAllAccount() {
         List<Account> accountList = accountRepository.findAll();
         if (accountList.isEmpty()) {
             throw new ResponseException(Constant.STATUS_CODE_FOUND, Constant.ERROR_UPDATE_DATA_NOT_FOUND);
@@ -51,7 +60,7 @@ public class AccountService {
         return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.MESSAGE_SUCCESS, accountList);
     }
 
-    public Response inquiryAccountById(Integer id) {
+    public Response<ResponseAccount> inquiryAccountById(Integer id) {
         Optional<Account> account;
         ResponseAccount responseAccount;
         try {
@@ -66,7 +75,7 @@ public class AccountService {
         return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.MESSAGE_SUCCESS, responseAccount);
     }
 
-    public Response deleteAccountById(Integer id) {
+    public Response<T> deleteAccountById(Integer id) {
         logger.info("==== start delete account =====");
         logger.info("delete account id : {}", id);
         try {
@@ -82,7 +91,7 @@ public class AccountService {
         return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.MESSAGE_SUCCESS);
     }
 
-    public Response createAccount(AccountRequest accountRequest) {
+    public Response<Account> createAccount(AccountRequest accountRequest) {
         logger.info("==== start process create account =====");
         Account account = new Account();
         try {
@@ -104,17 +113,19 @@ public class AccountService {
                     .setCreateDateTime(dateUtils.getFormatsDateMilli());
             accountRepository.save(account);
 
+            List<String> messages = Arrays.asList("boonyaris.p@aware.co.th");
+            emailService.sendSimpleMessage(requestMapperService.mapEmailRequest("test", getHtmlFile(), null, messages));
         } catch (ResponseException e) {
             logger.error(e.getDescription());
             return Response.fail(e.getExceptionCode(), e.getMessage());
-        } catch (ParseException e) {
+        } catch (IOException | ParseException e) {
             logger.error(e.getMessage());
         }
         logger.info("==== done process create account =====");
         return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.SUCCESS_LOGIN_ACCOUNT, account);
     }
 
-    public Response login(AccountLoginRequest accountLoginRequest) {
+    public Response<String> login(AccountLoginRequest accountLoginRequest) {
         logger.info("==== start process login =====");
         logger.info("username : {}", accountLoginRequest.getUsername());
         String token = null;
@@ -135,5 +146,10 @@ public class AccountService {
         }
         logger.info("==== done process login =====");
         return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.MESSAGE_SUCCESS, token);
+    }
+
+    private String getHtmlFile() throws IOException {
+        File file = new File("src/main/resources/templates/registerDone.txt");
+        return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
     }
 }

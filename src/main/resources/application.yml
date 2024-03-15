@@ -3,6 +3,14 @@ server:
     context-path: /rest-api
   port: 8086
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587  # Adjust port if needed (e.g., 465 for SSL)
+    username: boonyaris.pen@gmail.com
+    password: xxxxxxx  # **AVOID storing actual password in the file**
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
   datasource:
     type: org.apache.tomcat.jdbc.pool.DataSource
     url: jdbc:db2://localhost:50003/market

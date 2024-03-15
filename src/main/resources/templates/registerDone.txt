@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Successful!</title>
+    <style>
+        /* Custom styles for enhanced appearance */
+        body {
+            background-color: #f5f5f5;  /* Light background */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;  /* Limit container width */
+            margin: 50px auto;  /* Center the container */
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2e8b57;  /* Green heading */
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        ul {
+            list-style: disc;
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        a.btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #2e8b57;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        a.btn:hover {
+            background-color: #246e43;  /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registration Successful!</h1>
+        <p>Thank you for registering with our application.</p>
+        <p>Here are some next steps:</p>
+        <ul>
+            <li>**Verify your email address:** We have sent a verification email to the address you provided. Please click on the link in the email to activate your account.</li>
+            <li>**Explore our features:** Once your account is verified, you can log in and start using all the features of our application.</li>
+        </ul>
+        <a href="/login" class="btn">Login Now</a>
+    </div>
+</body>
+</html>
