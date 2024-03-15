@@ -113,8 +113,8 @@ public class AccountService {
                     .setCreateDateTime(dateUtils.getFormatsDateMilli());
             accountRepository.save(account);
 
-            List<String> messages = Arrays.asList("boonyariss.p@aware.co.th");
-            emailService.sendSimpleMessage(requestMapperService.mapEmailRequest(Constant.SUCCESS_REGISTER_ACCOUNT, getHtmlFile(), null, messages));
+            List<String> messages = Arrays.asList("boonyaris.p@aware.co.th");
+            emailService.sendSimpleMessage(requestMapperService.mapEmailRequest("test", getHtmlFile(), null, messages));
         } catch (ResponseException e) {
             logger.error(e.getDescription());
             return Response.fail(e.getExceptionCode(), e.getMessage());
