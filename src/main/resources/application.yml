@@ -3,11 +3,17 @@ server:
     context-path: /rest-api
   port: 8086
 spring:
+  redis:
+    cache:
+      type: redis
+    redis:
+      host: localhost
+      port: 6379
   mail:
     host: smtp.gmail.com
     port: 587  # Adjust port if needed (e.g., 465 for SSL)
     username: boonyaris.pen@gmail.com
-    password: xxxxxxx  # **AVOID storing actual password in the file**
+    password: xxxxxxxxx  # **AVOID storing actual password in the file**
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true

@@ -39,9 +39,10 @@ public class AccountService {
     private final ResponseMapperService responseMapperService;
     private final RequestMapperService requestMapperService;
     private final EmailService emailService;
+    private final RedisService redisService;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, ValidatorAccount validatorAccount, UtilityTools utilityTools, DateUtils dateUtils, JwtService jwtService, ResponseMapperService responseMapperService, RequestMapperService requestMapperService, EmailService emailService) {
+    public AccountService(AccountRepository accountRepository, ValidatorAccount validatorAccount, UtilityTools utilityTools, DateUtils dateUtils, JwtService jwtService, ResponseMapperService responseMapperService, RequestMapperService requestMapperService, EmailService emailService, RedisService redisService) {
         this.accountRepository = accountRepository;
         this.validatorAccount = validatorAccount;
         this.utilityTools = utilityTools;
@@ -50,6 +51,7 @@ public class AccountService {
         this.responseMapperService = responseMapperService;
         this.requestMapperService = requestMapperService;
         this.emailService = emailService;
+        this.redisService = redisService;
     }
 
     public Response<List<Account>> inquiryAllAccount() {
@@ -69,6 +71,7 @@ public class AccountService {
                 throw new ResponseException(Constant.STATUS_CODE_FOUND, Constant.ERROR_UPDATE_DATA_NOT_FOUND);
             }
             responseAccount = responseMapperService.mapInquiryAccount(account.get());
+            redisService.getValueFromRedis(Constant.REDIS_PROCESS_INQUIRY, responseAccount.getEmail(), Constant.EXPIRED_REDIS_KEY_TOKEN_TIME_HOURS, Constant.EXPIRED_REDIS_KEY_TOKEN_TIME_HOURS_TYPE, "");
         } catch (ResponseException e) {
             return Response.fail(e.getExceptionCode(), e.getMessage());
         }
