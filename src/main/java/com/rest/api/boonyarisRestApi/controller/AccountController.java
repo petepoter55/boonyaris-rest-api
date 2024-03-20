@@ -6,7 +6,7 @@ import com.rest.api.boonyarisRestApi.model.request.AccountLoginRequest;
 import com.rest.api.boonyarisRestApi.model.request.AccountRequest;
 import com.rest.api.boonyarisRestApi.model.response.Response;
 import com.rest.api.boonyarisRestApi.model.response.ResponseAccount;
-import com.rest.api.boonyarisRestApi.service.AccountService;
+import com.rest.api.boonyarisRestApi.service.impl.AccountServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -27,11 +27,11 @@ import java.util.List;
 public class AccountController {
     private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
-    private final AccountService accountService;
+    private final AccountServiceImpl accountServiceImpl;
 
     @Autowired
-    public AccountController(AccountService accountService) {
-        this.accountService = accountService;
+    public AccountController(AccountServiceImpl accountServiceImpl) {
+        this.accountServiceImpl = accountServiceImpl;
     }
 
     @ApiOperation(value = "inquiry All Account", nickname = "inquiryAllAccount", notes = "Inquiry All Account from database")
@@ -49,7 +49,7 @@ public class AccountController {
             HttpServletRequest request
     ) {
         logger.info("Path = {} method = {} INITIATED...", request.getRequestURI(), request.getMethod());
-        return accountService.inquiryAllAccount();
+        return accountServiceImpl.inquiryAllAccount();
     }
 
     @ApiOperation(value = "inquiry Account By Id", nickname = "inquiryAccountById", notes = "Inquiry Account By Id from database")
@@ -68,7 +68,7 @@ public class AccountController {
             HttpServletRequest request
     ) throws ResponseException {
         logger.info("Path = {} method = {} INITIATED...", request.getRequestURI(), request.getMethod());
-        return accountService.inquiryAccountById(id);
+        return accountServiceImpl.inquiryAccountById(id);
     }
 
     @ApiOperation(value = "Delete Account By Id", nickname = "deleteAccountById", notes = "Delete Account By Id from database")
@@ -87,7 +87,7 @@ public class AccountController {
             HttpServletRequest request
     ) {
         logger.info("Path = {} method = {} INITIATED...", request.getRequestURI(), request.getMethod());
-        return accountService.deleteAccountById(id);
+        return accountServiceImpl.deleteAccountById(id);
     }
 
     @ApiOperation(value = "create Account", nickname = "createAccount", notes = "Create Account in database")
@@ -106,7 +106,7 @@ public class AccountController {
             HttpServletRequest request
     ) {
         logger.info("Path = {} method = {} INITIATED...", request.getRequestURI(), request.getMethod());
-        return accountService.createAccount(accountRequest);
+        return accountServiceImpl.createAccount(accountRequest);
     }
 
     @ApiOperation(value = "Login Account By username password", nickname = "LoginAccountByUsernamePassword", notes = "Login Account By Username Password")
@@ -126,6 +126,6 @@ public class AccountController {
             HttpServletRequest request
     ) {
         logger.info("Path = {} method = {} INITIATED...", request.getRequestURI(), request.getMethod());
-        return accountService.login(accountLoginRequest);
+        return accountServiceImpl.login(accountLoginRequest);
     }
 }

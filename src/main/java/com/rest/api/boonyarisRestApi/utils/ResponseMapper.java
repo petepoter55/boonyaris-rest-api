@@ -1,4 +1,4 @@
-package com.rest.api.boonyarisRestApi.service;
+package com.rest.api.boonyarisRestApi.utils;
 
 import com.rest.api.boonyarisRestApi.entity.Account;
 import com.rest.api.boonyarisRestApi.model.response.ResponseAccount;
@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ResponseMapperService {
+public class ResponseMapper {
     private final UtilityTools tools;
 
     @Autowired
-    public ResponseMapperService(UtilityTools tools) {
+    public ResponseMapper(UtilityTools tools) {
         this.tools = tools;
     }
 

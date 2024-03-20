@@ -148,6 +148,7 @@ public class Constant {
     public static final String EXPIRED_REDIS_KEY_TOKEN_TIME_HOURS_TYPE = "HOURS";
     public static final String EXPIRED_REDIS_KEY_TOKEN_TIME_HOURS = "1";
     public static final String REDIS_PROCESS_LOGIN =  "LOGIN";
-    public static final String REDIS_PROCESS_INQUIRY =  "inquiry.email.key";
+    public static final String REDIS_KEY_INQUIRY_NAME =  "inquiry.username.key";
+    public static final String REDIS_PROCESS_INQUIRY =  "INQUIRY";
     public static final String REDIS_KEY_TOKEN_NAME = "Jwt_token_interceptor";
 }

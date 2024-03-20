@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.api.boonyarisRestApi.environment.Constant;
 import com.rest.api.boonyarisRestApi.exception.ResponseException;
 import com.rest.api.boonyarisRestApi.model.response.Response;
-import com.rest.api.boonyarisRestApi.service.JwtService;
+import com.rest.api.boonyarisRestApi.service.impl.JwtServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +19,11 @@ import java.io.PrintWriter;
 public class AuthenticationInterceptor implements HandlerInterceptor {
     private static final Logger logger = LogManager.getLogger(AuthenticationInterceptor.class);
 
-    private final JwtService jwtService;
+    private final JwtServiceImpl jwtServices;
 
     @Autowired
-    public AuthenticationInterceptor(JwtService jwtService) {
-        this.jwtService = jwtService;
+    public AuthenticationInterceptor(JwtServiceImpl jwtServices) {
+        this.jwtServices = jwtServices;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         // โค้ดที่จะทำงานก่อนที่ Controller จะถูกเรียก
         try {
             logger.debug("Pre Handle method is Calling");
-            this.jwtService.checkAccessToken(request.getHeader("token"));
+            this.jwtServices.checkAccessToken(request.getHeader("token"));
         } catch (ResponseException e) {
             logger.info(e.getMessage(), e);
             response.setHeader(Constant.CONTENT_TYPE, Constant.CONTENT_TYPE_JSON);
