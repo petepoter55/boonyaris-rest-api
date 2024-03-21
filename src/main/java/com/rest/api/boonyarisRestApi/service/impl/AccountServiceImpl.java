@@ -5,9 +5,11 @@ import com.rest.api.boonyarisRestApi.environment.Constant;
 import com.rest.api.boonyarisRestApi.exception.ResponseException;
 import com.rest.api.boonyarisRestApi.model.request.AccountLoginRequest;
 import com.rest.api.boonyarisRestApi.model.request.AccountRequest;
+import com.rest.api.boonyarisRestApi.model.request.AccountSearchRequest;
 import com.rest.api.boonyarisRestApi.model.response.Response;
 import com.rest.api.boonyarisRestApi.model.response.ResponseAccount;
 import com.rest.api.boonyarisRestApi.repository.AccountRepository;
+import com.rest.api.boonyarisRestApi.repository.AccountSpecification;
 import com.rest.api.boonyarisRestApi.service.*;
 import com.rest.api.boonyarisRestApi.utils.DateUtils;
 import com.rest.api.boonyarisRestApi.utils.RequestMapper;
@@ -19,6 +21,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -63,6 +68,20 @@ public class AccountServiceImpl implements AccountService {
             throw new ResponseException(Constant.STATUS_CODE_FOUND, Constant.ERROR_UPDATE_DATA_NOT_FOUND);
         }
         return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.MESSAGE_SUCCESS, accountList);
+    }
+
+    @Override
+    public Response<List<Account>> inquiryCriteriaAccount(AccountSearchRequest accountSearchRequest) {
+        Page<Account> accountPage;
+        try {
+            accountPage = accountRepository.findAll(AccountSpecification.condition(accountSearchRequest), PageRequest.of(accountSearchRequest.getPagingOffset(), accountSearchRequest.getPageSize(), Sort.by(Sort.Direction.DESC, "createDateTime")));
+            if (accountPage.getContent().isEmpty()) {
+                throw new ResponseException(Constant.STATUS_CODE_FOUND, Constant.ERROR_UPDATE_DATA_NOT_FOUND);
+            }
+        } catch (ResponseException e) {
+            return Response.fail(String.valueOf(e.getExceptionCode()), e.getMessage());
+        }
+        return Response.success(Constant.STATUS_CODE_SUCCESS, Constant.MESSAGE_SUCCESS, accountPage.getContent());
     }
 
     @Override

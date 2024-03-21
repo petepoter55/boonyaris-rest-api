@@ -4,6 +4,7 @@ import com.rest.api.boonyarisRestApi.entity.Account;
 import com.rest.api.boonyarisRestApi.exception.ResponseException;
 import com.rest.api.boonyarisRestApi.model.request.AccountLoginRequest;
 import com.rest.api.boonyarisRestApi.model.request.AccountRequest;
+import com.rest.api.boonyarisRestApi.model.request.AccountSearchRequest;
 import com.rest.api.boonyarisRestApi.model.response.Response;
 import com.rest.api.boonyarisRestApi.model.response.ResponseAccount;
 import com.rest.api.boonyarisRestApi.service.impl.AccountServiceImpl;
@@ -71,6 +72,25 @@ public class AccountController {
         return accountServiceImpl.inquiryAccountById(id);
     }
 
+    @ApiOperation(value = "inquiry Account By Criteria", nickname = "inquiryAccountByCriteria", notes = "Inquiry Account By Criteria from database")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Not Found"),
+            @ApiResponse(code = 409, message = "Business Error"),
+            @ApiResponse(code = 500, message = "Internal server error occurred"),
+            @ApiResponse(code = 503, message = "Service Unavailable")})
+    @PostMapping(value = "/inquiryByCriteria")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<List<Account>> inquiryCriteriaAccount(
+            @Valid @RequestBody(required = true) AccountSearchRequest accountSearchRequest,
+            HttpServletRequest request
+    ) throws ResponseException {
+        logger.info("Path = {} method = {} INITIATED...", request.getRequestURI(), request.getMethod());
+        return accountServiceImpl.inquiryCriteriaAccount(accountSearchRequest);
+    }
+
     @ApiOperation(value = "Delete Account By Id", nickname = "deleteAccountById", notes = "Delete Account By Id from database")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Bad Request"),
@@ -122,7 +142,7 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public Response<String> loginAccount(
             @ApiParam(name = "AccountLoginRequest", value = "Account login in the request body", required = true)
-            @RequestBody(required = true) AccountLoginRequest accountLoginRequest,
+            @Valid @RequestBody(required = true) AccountLoginRequest accountLoginRequest,
             HttpServletRequest request
     ) {
         logger.info("Path = {} method = {} INITIATED...", request.getRequestURI(), request.getMethod());
